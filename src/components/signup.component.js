@@ -22,6 +22,8 @@ export default class SignUp extends Component {
         this.verifyCode = this.verifyCode.bind(this)
     }
 
+    //******************************************************** */
+
     onCaptchaVarify() {
 
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
@@ -69,8 +71,7 @@ export default class SignUp extends Component {
         });
     }
 
-    /////////////////////**************** */
-
+    
     handleSubmit(e) {
         e.preventDefault()
         const { name, email, password, phoneNo, address } = this.state;
@@ -96,6 +97,8 @@ export default class SignUp extends Component {
                 console.log(data, "userRegister");
             })
     }
+
+    //******************************************************** */
     changeMobile(e) {
         this.setState({ phoneNo: e.target.value }, function () {
             if (this.state.phoneNo.length == 10) {
@@ -105,6 +108,9 @@ export default class SignUp extends Component {
             }
         })
     }
+    //*********************************************
+
+    
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
