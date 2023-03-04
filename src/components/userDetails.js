@@ -1,15 +1,13 @@
+import React, { useEffect, useState } from "react";
 
-import React, { Component } from 'react'
+import UserHome from "./userHome";
+import AdminHome from "./adminHome";
 
-export default class userDetails extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            userData: "",
-        };
+export default function UserDetails() {
+    const [userData, setUserData] = useState("");
+    const [admin, setAdmin] = useState(false);
 
-    }
-    componentDidMount() {
+    useEffect(() => {
         fetch("http://localhost:5000/userData", {
             method: "POST",
             crossDomain: true,
@@ -19,31 +17,26 @@ export default class userDetails extends Component {
                 "Access-Control-Allow-Origin": "*",
             },
             body: JSON.stringify({
-
-                token: window.localStorage.getItem("token")
+                token: window.localStorage.getItem("token"),
             }),
-        }).then((res) => res.json())
+        })
+            .then((res) => res.json())
             .then((data) => {
                 console.log(data, "userData");
-                this.setState({ userData: data.data })
-            })
-    }
+                if (data.data.userType == "Admin") {
+                    setAdmin(true);
+                }
 
-    logout(){
-        window.localStorage.clear();
-        window.location.href = "./sign-in"
-    }
+                setUserData(data.data);
 
-    render() {
-      return (
-                <div>
-                    Name < h1 > {this.state.userData.name}</h1 >
-                    Email < h1 > {this.state.userData.email}</h1 >
-                   <br />
-                   <button onClick={this.logout}>Logout</button>
-     
-               </div>
-  )
-        
-}
+                if (data.data == "token expired") {
+                    alert("Token expired login again");
+                    window.localStorage.clear();
+                    window.location.href = "./sign-in";
+                }
+            });
+    }, []);
+
+    return admin ? <AdminHome /> : <UserHome userData={userData} />
+
 }
